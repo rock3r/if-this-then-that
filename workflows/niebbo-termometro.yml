@@ -1,0 +1,19 @@
+on:
+  rss:
+    url: https://www.termometropolitico.it/author/nicolo-zuliani/feed
+jobs:
+  beam:
+    name: Beam to Telegram
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a Telegram message
+        uses: appleboy/telegram-action@v0.0.8
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            <b>Niebbo</b> ha pubblicato su <b>Termometro Politico</b>:
+            
+            ${{on.rss.outputs.title}}
+            ${{on.rss.outputs.link}}
+          format: html
