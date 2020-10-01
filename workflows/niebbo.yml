@@ -1,0 +1,19 @@
+on:
+  rss:
+    url: http://thevision.com/feed
+    config:
+      filter:
+        items:
+          creator:
+            $regex: Nicolò Zuliani
+jobs:
+  beam:
+    name: Beam to Telegram
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a Telegram message
+        uses: appleboy/telegram-action@v0.0.8
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          args: <b>Niebbo</b> ha pubblicato su <b>The Vision</b>:<br><br>${{on.rss.outputs.title}}<br>${{on.rss.outputs.link}}
