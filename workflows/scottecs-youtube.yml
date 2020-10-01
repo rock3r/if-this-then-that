@@ -1,0 +1,19 @@
+on:
+  rss:
+    url: https://www.youtube.com/feeds/videos.xml?channel_id=UCqSmyuqVNwklKKlqqdMmV_A
+jobs:
+  beam:
+    name: Beam to Telegram
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a Telegram message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            <b>Sio</b> ha pubblicato un nuovo video:
+            
+            ${{on.rss.outputs.title}}
+            ${{on.rss.outputs.link}}
+          format: html
