@@ -1,0 +1,19 @@
+on:
+  rss:
+    url: https://fabiensanglard.net/rss.xml
+jobs:
+  beam:
+    name: Beam to Telegram
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a Telegram message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            <b>Fabien Sanglard</b> ha pubblicato:
+            
+            ${{on.rss.outputs.title}}
+            ${{on.rss.outputs.link}}
+          format: html
