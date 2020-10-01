@@ -1,0 +1,19 @@
+on:
+  rss:
+    url: https://www.spreaker.com/show/4487227/episodes/feed
+jobs:
+  beam:
+    name: Beam to Telegram
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a Telegram message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            E' disponibile un nuovo episodio de <b>Lo Spiegone</b>:
+            
+            ${{on.rss.outputs.title}}
+            ${{on.rss.outputs.link}}
+          format: html
