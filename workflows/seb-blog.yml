@@ -1,0 +1,19 @@
+on:
+  rss:
+    url: https://blog.sebastiano.dev/rss/
+jobs:
+  beam:
+    name: Beam to Telegram
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a Telegram message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            <b>Quel cazzaro di Seb</b> ha pubblicato:
+            
+            ${{on.rss.outputs.title}}
+            ${{on.rss.outputs.link}}
+          format: html
