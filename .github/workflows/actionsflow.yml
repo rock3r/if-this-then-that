@@ -20,7 +20,7 @@ jobs:
           json-github: ${{ toJSON(github) }}
       - name: Setup act
         uses: actionsflow/setup-act-for-actionsflow@v1
-      - name: Fix act setup (temp)
-        run: rm ~/.actrc && echo "-P ubuntu-latest=catthehacker/ubuntu:act-latest" >~/.actrc
+        with:
+          version: 0.2.17
       - name: Run act
         run: act -P ubuntu-latest=catthehacker/ubuntu:act-latest --workflows ./dist/workflows --secret-file ./dist/.secrets --eventpath ./dist/event.json --env-file ./dist/.env
