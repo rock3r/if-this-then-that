@@ -8,6 +8,7 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     name: Run
     steps:
       - uses: actions/checkout@v2
@@ -19,5 +20,7 @@ jobs:
           json-github: ${{ toJSON(github) }}
       - name: Setup act
         uses: actionsflow/setup-act-for-actionsflow@v1
+      - name: Fix act setup (temp)
+        run: echo "-P ubuntu-latest=catthehacker/ubuntu:act-latest\n-P ubuntu-20.04=catthehacker/ubuntu:act-20.04\n-P ubuntu-18.04=catthehacker/ubuntu:act-18.04\n-P ubuntu-16.04=catthehacker/ubuntu:act-16.04" >~/.actrc
       - name: Run act
         run: act --workflows ./dist/workflows --secret-file ./dist/.secrets --eventpath ./dist/event.json --env-file ./dist/.env
