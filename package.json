@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "author": "Owen Young <theowenyoung@gmail.com>",
   "devDependencies": {
-    "actionsflow": "^1.11.2"
+    "actionsflow": "^1.11.4"
   },
   "keywords": [
     "actionsflow",
@@ -14,8 +14,9 @@
   "license": "0BSD",
   "scripts": {
     "build": "actionsflow build",
-    "start": "npm run build",
-    "act": "act --workflows ./dist/workflows --secret-file ./dist/.secrets --eventpath ./dist/event.json --env-file ./dist/.env",
+    "start": "actionsflow start",
+    "watch": "actionsflow start -w",
+    "act": "act --workflows ./dist/workflows --secret-file ./dist/.secrets --eventpath ./dist/event.json --env-file ./dist/.env -P ubuntu-latest=actionsflow/act-environment:v1 -P ubuntu-18.04=actionsflow/act-environment:v1",
     "clean": "actionsflow clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

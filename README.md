@@ -3,7 +3,7 @@ This is a workflow repository powered by [Actionsflow](https://github.com/action
 
 # 🏁 Getting Started <a name = "getting_started"></a>
 
-Build an Actionsflow workflow is a three-step process:
+Build an Actionsflow workflow is a four-step process:
 
 1. **Create a public Github repository by this [link](https://github.com/actionsflow/actionsflow-workflow-default/generate).**
 
@@ -21,6 +21,15 @@ Build an Actionsflow workflow is a three-step process:
    └── package.json
    ```
 
+1. **Uncomment [`.github/workflows/actionsflow.yml`](/.github/workflows/actionsflow.yml) schedule event**
+
+    ```yml
+    on:
+      schedule:
+        - cron: "*/15 * * * *"
+    ```
+    > Note: To prevent abuse, by default, the schedule is commented, please modify the schedule time according to your own needs, the default is once every 15 minutes. Learn more about schedule event, please see [here](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#schedule)
+
 1. **Define your [workflow file](https://actionsflow.github.io/docs/workflow/) at `workflows` directory**
 
    A typical workflow file `rss.yml` looks like this:
@@ -28,19 +37,23 @@ Build an Actionsflow workflow is a three-step process:
    ```yaml
    on:
      rss:
-       url: https://hnrss.org/newest?points=300
+       url: https://hnrss.org/newest?points=300&count=3
    jobs:
-     ifttt:
-       name: Make a Request to IFTTT
+     request:
+       name: Make a HTTP Request
        runs-on: ubuntu-latest
        steps:
-         - uses: actionsflow/ifttt-webhook-action@v1
+         - name: Make a HTTP Request
+           uses: actionsflow/axios@v1
            with:
-             event: notice
-             key: ${{ secrets.IFTTT_KEY }}
-             value1: ${{on.rss.outputs.title}}
-             value2: ${{on.rss.outputs.contentSnippet}}
-             value3: ${{on.rss.outputs.link}}
+             url: https://hookb.in/VGPzxoWbdjtE22bwznzE
+             method: POST
+             body: |
+               {
+                 "link":"${{ on.rss.outputs.link }}", 
+                 "title": "${{ on.rss.outputs.title }}",
+                 "content":"<<<${{ on.rss.outputs.contentSnippet }}>>>"
+               }
    ```
 
    For more information about the Actionsflow workflow file, see the
@@ -54,21 +67,24 @@ Then, Actionsflow will run your workflows as you defined, you can view logs at y
 
 For more information, see [Full documentation](https://actionsflow.github.io/docs/)
 
-## Run manually
-
-The power of Actionsflow comes from the Github workflow file [`.github/workflows/actionsflow.yml`](./.github/workflows/actionsflow.yml), usually, Actionsflow runs with [`a per 5 minutes' scheduled event`](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#scheduled-events), but you can also run it manually by [`workflow_dispatch` event](https://docs.github.com/en/free-pro-team@latest/actions/managing-workflow-runs/manually-running-a-workflow). Click Actions tab of your repository, and click `Run workflow` at `Actionsflow` workflow.
-
-For more information, see [Manually running a workflow](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#scheduled-events)
-
-
 ## Run Locally
 
-You can run Actionsflow locally for testing your workflow files.
+You can run self-hosted Actionsflow manually or [by docker](https://actionsflow.github.io/docs/self-hosted/#docker): 
 
-### Install
+## Prerequisites
+
+1. Install [docker](https://docs.docker.com/get-docker/)
+1. Install [act](https://github.com/nektos/act)
+1. Install dependencies by running `npm install`
+
+### Start
+
+Start Actionsflow locally:
 
 ```bash
-npm install
+npm run start
+# Then, the cron job and webhook server will start running
+# The webhook endpoint will be ran at http://localhost:3000/webhook/
 ```
 
 ### Build
@@ -87,7 +103,8 @@ Actionsflow build will use cache for deduplicating the data, if you want to test
 npm run clean
 ```
 
-> If you want to run workflows built by Actionsflow locally, you should use `npm run act`, for more information, see [act](https://github.com/nektos/act)
+Learn more abount self-hosted Actionsflow [here](https://actionsflow.github.io/docs/self-hosted)
+
 
 # 🎓 Learn More <a name="reference"></a>
 
